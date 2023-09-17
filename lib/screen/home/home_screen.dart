@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:event_app/screen/event/event_detail_screen.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String Token="";
 
   List<String> locations = ['Location 1', 'Location 2', 'Location 3'];
@@ -33,21 +33,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _firebaseMessaging.getToken().then((token) {
-      print("FCM Token: $token");
-      setState(() {
-        Token = token!;
-        //print(isOffline);
-      });
-      // TODO: Save the token to your backend or use it for sending notifications
-    });
+    // _firebaseMessaging.getToken().then((token) {
+    //   print("FCM Token: $token");
+    //   setState(() {
+    //     Token = token!;
+    //     //print(isOffline);
+    //   });
+    //   // TODO: Save the token to your backend or use it for sending notifications
+    // });
   }
 
 
   @override
   Widget build(BuildContext context) {
   return Scaffold(
-      extendBodyBehindAppBar: true, // Enable the app bar to overlap the body
+      // extendBodyBehindAppBar: true, // Enable the app bar to overlap the body
       // appBar: AppBar(title: Text('Home')),
       appBar: AppBar(
         backgroundColor: Colors.transparent, // Make the app bar transparent
@@ -84,60 +84,32 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Stack(
+      body: ListView(
         children: [
-          // Container(
-          //   decoration: BoxDecoration(
-          //     image: DecorationImage(
-          //       image: AssetImage('assets/bg.jpg'), // Replace with your background image
-          //       fit: BoxFit.cover,
-          //     ),
-          //   ),
-          // ),
-          Container(
-          width: double.maxFinite,
-          height: double.maxFinite,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.green, Color.fromARGB(255, 29, 221, 163)],
-            ),
-          ),),
-          // Frosted glass-like overlay
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              color: Colors.white.withOpacity(0.3), // Adjust opacity as needed
-            ),
-          ),
-          // Frosted glass-like overlay
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'Event Categories',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'Event Categories',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                EventCategoryList(eventApi: eventApi),// Pass the eventApi instance
+              ),
+              EventCategoryList(eventApi: eventApi),// Pass the eventApi instance
 
 
-                SliderImageList(sliderApi: eventApi),// Hide the slider if there are no images
+              SliderImageList(sliderApi: eventApi),// Hide the slider if there are no images
 
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'Upcoming Events',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'Upcoming Events',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                Expanded(
-                  child: EventHList(eventApi: eventApi), // Pass the eventApi instance
-                ),
-              ],
-            ),
+              ),
+              EventHList(eventApi: eventApi),
+            ],
           ),
         ],
       ),
@@ -253,7 +225,7 @@ class EventHList extends StatelessWidget {
         } else if (snapshot.hasData) {
           final events = snapshot.data!;
           return Container(
-            height: 100.0,
+            height: 200.0,
             child: ListView.builder(
               itemCount: events.length,
               scrollDirection: Axis.horizontal,
