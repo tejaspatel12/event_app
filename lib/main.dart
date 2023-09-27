@@ -1,7 +1,7 @@
 import 'package:event_app/screen/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth/login_screen.dart';
@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
             if (snapshot.data == true) {
               return HomeScreen(); // User is logged in, show home screen
             } else {
-              // return LoginScreen(); // User is not logged in, show login screen
-              return HomeScreen(); // User is not logged in, show login screen
+              return LoginScreen(); // User is not logged in, show login screen
+              // return HomeScreen(); // User is not logged in, show login screen
             }
           }
         },
