@@ -4,6 +4,7 @@ import 'package:event_app/screen/event/event_detail_screen.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/api.dart';
 import '../../model/event_category_model.dart';
@@ -22,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String Token="";
+  late BuildContext _ctx;
 
   List<String> locations = ['Location 1', 'Location 2', 'Location 3'];
   String selectedLocation = 'Location 1'; // Default selected location
@@ -44,78 +46,127 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
+  VoidCallback _logoutCallback() {
+    return () async {
+      await _handleLogout();
+    };
+  }
+
+  Future<void> _handleLogout() async {
+    // Clear the isLoggedIn value in SharedPreferences
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false);
+
+    // Navigate to the login screen
+    Navigator.of(context).pushNamed('/');
+    // Navigator.pushReplacement(
+    //   context as BuildContext,
+    //   MaterialPageRoute(
+    //     builder: (context) => LoginScreen(),
+    //   ),
+    // );
+  }
+
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-      // extendBodyBehindAppBar: true, // Enable the app bar to overlap the body
-      // appBar: AppBar(title: Text('Home')),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent, // Make the app bar transparent
-        // backgroundColor: Colors.white, // Background color of the app bar
-        elevation: 0, // Remove the shadow
-        // titleSpacing: 0, // Remove title spacing
-        title: const Row(
-          children: [
-            CircleAvatar(
-              // User profile image
-              radius: 20,
-              backgroundImage: NetworkImage(
-                // 'https://example.com/user_profile_image.jpg', // Replace with the user's profile image URL
-                'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3387&q=80', // Replace with the user's profile image URL
+  return WillPopScope(
+    onWillPop: () async {
+      // Prevent navigating back to the previous screen
+      return false;
+    },
+    child: Scaffold(
+        // extendBodyBehindAppBar: true, // Enable the app bar to overlap the body
+        // appBar: AppBar(title: Text('Home')),
+        appBar: AppBar(
+          iconTheme: const IconThemeData(
+              color: Colors.black
+          ),
+          backgroundColor: Colors.transparent, // Make the app bar transparent
+          elevation: 0, // Remove the shadow
+          titleSpacing: 0, // Remove title spacing
+          title: const Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                // User profile image
+                radius: 20,
+                backgroundImage: NetworkImage(
+                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3387&q=80', // Replace with the user's profile image URL
+                ),
               ),
-            ),
-            SizedBox(width: 8), // Add spacing between the profile image and user name
-            Text(
-              'John Doe', // User name
-              style: TextStyle(
-                color: Colors.black, // Text color
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              SizedBox(width: 8), // Add spacing between the profile image and user name
+              Text(
+                'John Doe', // User name
+                style: TextStyle(
+                  color: Colors.black, // Text color
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.notifications, color: Colors.black), // Notification button
+              onPressed: () {
+                // Handle notification button tap
+              },
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications), // Notification button
-            onPressed: () {
-              // Handle notification button tap
-            },
-          ),
-        ],
-      ),
-      body: ListView(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Event Categories',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        body: ListView(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Event Categories',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-              EventCategoryList(eventApi: eventApi),// Pass the eventApi instance
+                EventCategoryList(eventApi: eventApi),// Pass the eventApi instance
 
 
-              SliderImageList(sliderApi: eventApi),// Hide the slider if there are no images
+                SliderImageList(sliderApi: eventApi),// Hide the slider if there are no images
 
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Upcoming Events',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Upcoming Events',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-              EventHList(eventApi: eventApi),
-            ],
-          ),
-        ],
+                EventHList(eventApi: eventApi),
+
+                SizedBox(height: 10,),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    onTap: _logoutCallback(),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: Colors.blue,
+                      ),
+                      child: Center(child: const Text("Logout",style: TextStyle(color: Colors.white),)),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
-    );
+  );
   }
 }
+
+
 
 class EventCategoryList extends StatelessWidget {
   final EventApi eventApi;
@@ -225,7 +276,8 @@ class EventHList extends StatelessWidget {
         } else if (snapshot.hasData) {
           final events = snapshot.data!;
           return Container(
-            height: 200.0,
+            // color: Colors.blue,
+            height: 220.0,
             child: ListView.builder(
               itemCount: events.length,
               scrollDirection: Axis.horizontal,
