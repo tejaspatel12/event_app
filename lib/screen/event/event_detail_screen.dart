@@ -307,21 +307,26 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
                     Flexible(
                       flex: 3,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.message,color: Colors.red,),
-                              SizedBox(width: 5,),
-                              Text("Message",style: TextStyle(color: Colors.red),),
-                            ],
+                      child: GestureDetector(
+                        onTap: (){
+
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.red),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.message,color: Colors.red,),
+                                SizedBox(width: 5,),
+                                Text("Message",style: TextStyle(color: Colors.red),),
+                              ],
+                            ),
                           ),
                         ),
                       ),
