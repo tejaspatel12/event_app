@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:event_app/model/slider_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/booked_event_model.dart';
 import '../model/event_category_model.dart';
 import '../model/event_model.dart';
 
@@ -48,5 +50,42 @@ class EventApi {
       throw Exception('Failed to load slider images');
     }
   }
+
+
+
+  Future<void> bookEvent(String eventId, String userId) async {
+    final url = Uri.parse('$baseUrl/event_booking.php'); // Replace with your actual API endpoint
+
+    final response = await http.post(
+      url,
+      body: {
+        'eventId': eventId,
+        'userId': userId,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Request was successful
+      print('Event booked successfully');
+    } else {
+      // Request failed
+      print('Failed to book event. Status code: ${response.statusCode}');
+      throw Exception('Failed to book event');
+    }
+  }
+
+
+  // Function to store user's mobile number and get user ID in response
+  Future<void> storeUserMobileNumber(String mobileNumber) async {// Replace with your API URL
+    final response = await http.post(Uri.parse('$baseUrl/login.php'), body: {'mobile_number': mobileNumber});
+    if (response.statusCode == 200) {
+      final userId = response.body; // Assuming the API returns the user ID
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('userId', userId);
+    } else {
+      // Handle API error
+    }
+  }
+
 
 }

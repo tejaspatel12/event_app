@@ -3,6 +3,7 @@ class Event {
   final String title;
   final String imageUrl;
   final String location;
+  final String location_full;
   final DateTime eventTime;
   final String description;
   final double price;
@@ -12,6 +13,7 @@ class Event {
     required this.title,
     required this.imageUrl,
     required this.location,
+    required this.location_full,
     required this.eventTime,
     required this.description,
     required this.price,
@@ -36,6 +38,7 @@ class Event {
       id: int.parse(json['id'] as String),
       title: json['title'] != null ? json['title'] as String : 'No Title',
       location: json['location'] != null ? json['location'] as String : 'No Location',
+      location_full: json['location_full'] != null ? json['location_full'] as String : 'No Location',
       // eventTime: json['eventTime'] != null ? json['eventTime'] as String : 'No Time',
       eventTime: json['eventTime'] != null ? DateTime.parse(json['eventTime'] as String) // Parse the string to DateTime
           : DateTime.now(), // Provide a default DateTime if null

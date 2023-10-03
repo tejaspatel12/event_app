@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../data/api.dart';
+import 'package:http/http.dart' as http;
 
 import '../screen/home/home_screen.dart';
 
@@ -105,6 +109,39 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future<void> storeUserMobileNumber(String mobileNumber) async {
+    final apiUrl = Uri.parse('https://event.activeapp.in/login.php'); // Replace with your API endpoint
+
+    try {
+      final response = await http.post(
+        apiUrl,
+        body: {
+          'mobile_number': mobileNumber,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Request was successful
+        print('User data inserted successfully');
+
+        // Parse the response to get the user ID
+        final userId = jsonDecode(response.body)['userId'].toString();
+
+        // Store the user ID in SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString('userId', userId);
+
+        print('User ID stored in SharedPreferences: $userId');
+      } else {
+        // Request failed
+        print('Error: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      // Handle exceptions, such as network errors
+      print('Error: $e');
+    }
+  }
+
   // Function to handle successful login
   Future<void> _handleSuccessfulLogin() async {
     // Implement your logic for a successful login
@@ -117,6 +154,17 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setBool('isLoggedIn', true);
 
     // Navigate to HomeScreen without a back arrow
+    // Store user mobile number in the database via API
+
+    final mobileNumber = selectedTo + phoneNumber;
+
+    // Call the API to store the user's mobile number and get the user ID
+    // final mobileNumber = selectedTo + phoneNumber;
+    await storeUserMobileNumber(mobileNumber);
+
+    // final mobileNumber = selectedTo + phoneNumber;
+    // await storeUserMobileNumber(mobileNumber);
+
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
 
     // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(),),);
