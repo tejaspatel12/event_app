@@ -354,7 +354,8 @@ class EventCategoryList extends StatelessWidget {
                   child: Container(
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(30)),
-                      color: Colors.purple,
+                      // color: Color(F007393B3),
+                      color: Colors.purple
                     ),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
@@ -365,6 +366,8 @@ class EventCategoryList extends StatelessWidget {
                             child: Container(
                               width: 40, // Adjust the width and height to your preference
                               height: 40,
+                              color: Colors.purple.shade50,
+                              // color: Color(0xffbad9d8),
                               child: Image.network(
                                 category.imageUrl,
                                 fit: BoxFit.cover, // Adjust the fit as needed
