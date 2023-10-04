@@ -55,26 +55,32 @@ class _BookedEventListScreenState extends State<BookedEventListScreen> {
     }
   }
 
-  Future<void> cancelBooking(String bookingId) async {
-    try {
-      final response = await http.post(
-        Uri.parse('https://event.activeapp.in/cancel_booking.php'), // Replace with your cancel booking API endpoint
-        body: jsonEncode({'booking_id': bookingId}), // Include the booking ID to cancel
-        headers: {'Content-Type': 'application/json'},
-      );
 
-      if (response.statusCode == 200) {
-        // Booking successfully canceled
+  Future<void> cancelBooking(String bookingId) async {
+    final url = Uri.parse('https://event.activeapp.in/cancel_booking.php/cancel_booking.php'); // Replace with your actual API endpoint
+
+    final response = await http.post(
+      url,
+      body: {
+        'booking_id': bookingId,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Request was successful
         print('Booking canceled successfully');
 
-      } else {
-        // Handle different HTTP response codes (e.g., 404 for not found, 500 for server error)
-        print('Failed to cancel booking. Status code: ${response.statusCode}');
+        // Update the state to trigger a screen refresh
+        setState(() {
+          // Add any state changes you want here
+          // For example, you can update a list of bookings
+          // or any other data that needs to be refreshed on the screen.
+          fetchBookedEvents(userId);
+        });
 
-      }
-    } catch (e) {
-      // Handle errors here
-      print('Error: $e');
+    } else {
+      // Request failed
+        print('Failed to cancel booking. Status code: ${response.statusCode}');
     }
   }
 
@@ -85,102 +91,109 @@ class _BookedEventListScreenState extends State<BookedEventListScreen> {
       appBar: AppBar(
         title: Text('Events'),
       ),
-      body: ListView.builder(
-        itemCount: bookedEvents.length,
-        itemBuilder: (BuildContext context, int index) {
-          // Customize the list item UI based on your API response structure
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: 200,
-              decoration: BoxDecoration(
-                // color: Colors.purple,
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
-                      child: Container(
-                        width: 140, // Adjust the width and height to your preference
-                        child: Image.network(
-                          bookedEvents[index].imageUrl,
-                          fit: BoxFit.cover, // Adjust the fit as needed
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await fetchBookedEvents(userId);
+        },
+        child: ListView.builder(
+          itemCount: bookedEvents.length,
+          itemBuilder: (BuildContext context, int index) {
+            // Customize the list item UI based on your API response structure
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 200,
+                decoration: BoxDecoration(
+                  // color: Colors.purple,
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
+                        child: Container(
+                          width: 160, // Adjust the width and height to your preference
+                          child: Image.network(
+                            bookedEvents[index].imageUrl,
+                            fit: BoxFit.cover, // Adjust the fit as needed
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  Flexible(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(bookedEvents[index].title ?? "",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                    Flexible(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(bookedEvents[index].title ?? "",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
 
-                        SizedBox(height: 5,),
+                          SizedBox(height: 5,),
 
-                        Row(
-                          children: [
-                            SvgPicture.asset('assets/icons/maps.svg',height: 15,),
-                            SizedBox(width: 5,),
-                            Flexible(flex: 2, child: Text(bookedEvents[index].location_full?? "",overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.black54,fontSize: 12,fontWeight: FontWeight.w400))),
-                          ],
-                        ),
+                          Row(
+                            children: [
+                              SvgPicture.asset('assets/icons/maps.svg',height: 15,),
+                              SizedBox(width: 5,),
+                              Flexible(flex: 2, child: Text(bookedEvents[index].location_full?? "",overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.black54,fontSize: 12,fontWeight: FontWeight.w400))),
+                            ],
+                          ),
 
-                        SizedBox(height: 5,),
+                          SizedBox(height: 5,),
 
-                        Row(
-                          children: [
-                            SvgPicture.asset('assets/icons/calendar.svg',height: 15,),
-                            SizedBox(width: 5,),
-                            Flexible(flex: 2, child: Text('${bookedEvents[index].eventTime}'?? "",overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.black54,fontSize: 12,fontWeight: FontWeight.w400))),
-                          ],
-                        ),
+                          Row(
+                            children: [
+                              SvgPicture.asset('assets/icons/calendar.svg',height: 15,),
+                              SizedBox(width: 5,),
+                              Flexible(flex: 2, child: Text('${bookedEvents[index].eventTime}'?? "",overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.black54,fontSize: 12,fontWeight: FontWeight.w400))),
+                            ],
+                          ),
 
-                        // SizedBox(height: 5,),
-                        //
-                        // Row(
-                        //   children: [
-                        //     GestureDetector(
-                        //       onTap: (){
-                        //         cancelBooking(bookedEvents[index].id.toString());
-                        //       },
-                        //       child: Container(
-                        //         decoration: const BoxDecoration(
-                        //           borderRadius: BorderRadius.all(Radius.circular(5)),
-                        //           color: Colors.red,
-                        //         ),
-                        //         child: const Padding(
-                        //           padding: EdgeInsets.all(8.0),
-                        //           child: Center(child: Text("Cancel Booking",style: TextStyle(color: Colors.white,fontSize: 10),)),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                      ],
+                          SizedBox(height: 5,),
+
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: (){
+                                  // print("Hiiiiiii ================== "+bookedEvents[index].eb_id.toString());
+                                  cancelBooking(bookedEvents[index].eb_id.toString());
+                                  // cancelBooking();
+                                },
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    color: Colors.red,
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Center(child: Text("Cancel Booking",style: TextStyle(color: Colors.white,fontSize: 10),)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
 
 
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

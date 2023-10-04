@@ -1,5 +1,5 @@
 class BookedEvent {
-  final int id;
+  final int eb_id;
   final DateTime bookingDate;
   final String title;
   final String imageUrl;
@@ -7,7 +7,7 @@ class BookedEvent {
   final DateTime eventTime;
 
   BookedEvent({
-    required this.id,
+    required this.eb_id,
     required this.bookingDate,
     required this.title,
     required this.imageUrl,
@@ -17,7 +17,7 @@ class BookedEvent {
 
   factory BookedEvent.fromJson(Map<String, dynamic> json) {
     return BookedEvent(
-      id: int.parse(json['id'] as String),
+      eb_id: int.parse(json['eb_id'] as String),
       imageUrl: json['image_url'] ?? '',
       location_full: json['location_full'] ?? 'No Location',
       title: json['title'] ?? 'No title',
