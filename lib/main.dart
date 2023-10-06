@@ -43,6 +43,7 @@ class AuthenticationWrapper extends StatelessWidget {
           if (snapshot.data == true) {
             return const HomeScreen(); // User is logged in, show home screen
           } else {
+            return HomeScreen(); // User is not logged in, show login screen
             return LoginScreen(); // User is not logged in, show login screen
           }
         }

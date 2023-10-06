@@ -13,7 +13,9 @@ import '../../data/api.dart';
 import '../../model/event_category_model.dart';
 import '../../model/event_model.dart';
 import '../../model/slider_model.dart';
+import '../category/category_detail_screen.dart';
 import '../event/booked_event_screen.dart';
+import '../event/event_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -50,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadUserId();
+    // _loadUserId();
     // _firebaseMessaging.getToken().then((token) {
     //   print("FCM Token: $token");
     //   setState(() {
@@ -351,32 +353,49 @@ class EventCategoryList extends StatelessWidget {
                 final category = categories[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0), // Add space between category items
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      // color: Color(F007393B3),
-                      color: Colors.purple
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(50), // Adjust the radius as needed
-                            child: Container(
-                              width: 40, // Adjust the width and height to your preference
-                              height: 40,
-                              color: Colors.purple.shade50,
-                              // color: Color(0xffbad9d8),
-                              child: Image.network(
-                                category.imageUrl,
-                                fit: BoxFit.cover, // Adjust the fit as needed
+                  child: GestureDetector(
+                    onTap: ()
+                    {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => EventListScreen(categoryId: category),
+                      //   ),
+                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CategoryDetailScreen(category: categories[index]),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        // color: Color(F007393B3),
+                        color: Colors.purple
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(50), // Adjust the radius as needed
+                              child: Container(
+                                width: 40, // Adjust the width and height to your preference
+                                height: 40,
+                                color: Colors.purple.shade50,
+                                // color: Color(0xffbad9d8),
+                                child: Image.network(
+                                  category.imageUrl,
+                                  fit: BoxFit.cover, // Adjust the fit as needed
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 10,),
-                          Text(category.name ?? "",style: TextStyle(color: Colors.white),),
-                        ],
+                            SizedBox(width: 10,),
+                            Text(category.name ?? "",style: TextStyle(color: Colors.white),),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -69,15 +69,6 @@ class _BookedEventListScreenState extends State<BookedEventListScreen> {
     if (response.statusCode == 200) {
       // Request was successful
         print('Booking canceled successfully');
-
-        // Update the state to trigger a screen refresh
-        setState(() {
-          // Add any state changes you want here
-          // For example, you can update a list of bookings
-          // or any other data that needs to be refreshed on the screen.
-          fetchBookedEvents(userId);
-        });
-
     } else {
       // Request failed
         print('Failed to cancel booking. Status code: ${response.statusCode}');
