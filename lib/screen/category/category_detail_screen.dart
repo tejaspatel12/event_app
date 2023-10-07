@@ -17,6 +17,7 @@ class CategoryDetailScreen extends StatelessWidget {
         children: [
           Image.network(category.imageUrl),
           Text(category.name),
+          Text(category.description),
         ],
       ),
     );

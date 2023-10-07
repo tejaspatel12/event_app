@@ -87,18 +87,162 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-  return WillPopScope(
-    onWillPop: () async {
-      // Prevent navigating back to the previous screen
-      return false;
-    },
-    child: Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Color(0xFFF3F0F0),
+    return WillPopScope(
+      onWillPop: () async {
+        // Prevent navigating back to the previous screen
+        return false;
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Color(0xFFF3F0F0),
         // extendBodyBehindAppBar: true, // Enable the app bar to overlap the body
-        appBar: AppBar(title: Text('Home')),
+        // appBar: AppBar(title: Text('Home')),
 
         // drawer: CustomSidebar(), // Add your custom sidebar here
+        appBar: PreferredSize(
+          // preferredSize: 200, // Add statusBarHeight
+          preferredSize: Size.fromHeight(190.0),
+          child: Stack(
+            children: [
+              AppBar(
+                automaticallyImplyLeading: false,
+                // backgroundColor: Colors.red,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: IconButton(
+                  icon: SvgPicture.asset('assets/icons/menus.svg',height: 32,),
+                  // onPressed: () => Scaffold.of(context).openDrawer(),
+                  onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                ),
+                actions: [
+                  Container(
+                    margin: EdgeInsets.only(right: 20.0), // Adjust the right margin as needed
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white38, // Change the background color as needed
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.notifications_none,
+                        color: Colors.white, // Change the icon color as needed
+                      ),
+                      onPressed: () {
+                        // Add your button's functionality here
+                      },
+                    ),
+                  ),
+
+                ],
+
+                flexibleSpace: Container(
+                  height: 200,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.blue,
+                    // color: Colors.pink,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Current Location',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                            ],
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            'Surat, India',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset('assets/icons/search.svg',height: 25,),
+                                SizedBox(width: 5,),
+                                Container(height: 20, child: VerticalDivider(color: Colors.white54)),
+                                SizedBox(width: 5,),
+                                const Text(
+                                  'Search...',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                  color: Colors.white38,
+                                  // color: Colors.pink,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    children: [
+                                      // filter.svg
+                                      Container(
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white54, // Change the background color as needed
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: SvgPicture.asset('assets/icons/filter.svg',height: 14,),
+                                          )
+                                      ),
+                                      SizedBox(width: 5,),
+                                      Text('Filters',style: TextStyle(color: Colors.white,fontSize: 11),),
+                                    ],
+                                  ),
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),
+              ),
+
+              Positioned(
+                // bottom: 0,
+                  top: 170, // Adjust this value
+                  left: 0,
+                  right: 0,
+                  child: EventCategoryList(eventApi: eventApi)
+              ),//
+
+
+            ],
+          ),
+        ),
         // drawer: CustomSidebar(), // Add your custom sidebar here
 
         drawer: CustomSidebar(), // Add your custom sidebar here
@@ -107,17 +251,17 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text(
-                    'Event Categories',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                EventCategoryList(eventApi: eventApi),// Pass the eventApi instance
+                // const Padding(
+                //   padding: EdgeInsets.all(15.0),
+                //   child: Text(
+                //     'Event Categories',
+                //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                //   ),
+                // ),
+                // EventCategoryList(eventApi: eventApi),// Pass the eventApi instance
 
 
-                SliderImageList(sliderApi: eventApi),// Hide the slider if there are no images
+                // SliderImageList(sliderApi: eventApi),// Hide the slider if there are no images
 
                 const Padding(
                   padding: EdgeInsets.all(15.0),
@@ -177,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-  );
+    );
   }
 }
 
@@ -227,9 +371,9 @@ class EventCategoryList extends StatelessWidget {
                     },
                     child: Container(
                       decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        // color: Color(F007393B3),
-                        color: Colors.purple
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                          // color: Color(F007393B3),
+                          color: Colors.purple
                       ),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),

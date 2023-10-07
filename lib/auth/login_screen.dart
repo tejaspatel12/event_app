@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -15,12 +16,43 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late String phoneNumber;
   late String verificationId;
 
+
   String selectedTo = '+91';
+  String token = "";
   List<String> toOptions = ['+91','+44'];
+
+  @override
+  // Add a method to retrieve FCM token asynchronously
+  Future<void> _getFCMToken() async {
+    String? fcmToken = await _firebaseMessaging.getToken();
+    // Print the FCM token for testing
+    print('FCM Token: $fcmToken');
+    token = fcmToken!;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Call the async method to retrieve FCM token
+    _getFCMToken();
+  }
+
+  // initState() async {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   // Retrieve the FCM token ID
+  //   String? fcmToken = await _firebaseMessaging.getToken();
+  //
+  //   // Print the FCM token for testing
+  //   print('FCM Token: $fcmToken');
+  // }
 
 
   void _showDropdown(BuildContext context, List<String> options, String selectedValue, Function(String) onSelection) {
@@ -117,6 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
         apiUrl,
         body: {
           'mobile_number': mobileNumber,
+          'token': token,
         },
       );
 
