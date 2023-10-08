@@ -80,7 +80,7 @@ class _BookedEventListScreenState extends State<BookedEventListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Events'+ userId),
+        title: Text('Events'),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
