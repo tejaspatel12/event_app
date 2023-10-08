@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // _loadUserId();
+    _loadUserId();
     // _firebaseMessaging.getToken().then((token) {
     //   print("FCM Token: $token");
     //   setState(() {
@@ -87,97 +87,95 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-  return WillPopScope(
-    onWillPop: () async {
-      // Prevent navigating back to the previous screen
-      return false;
-    },
-    child: Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Color(0xFFF3F0F0),
-        // extendBodyBehindAppBar: true, // Enable the app bar to overlap the body
-        appBar: AppBar(title: Text('Home')),
+  return Scaffold(
+    key: _scaffoldKey,
+    backgroundColor: Color(0xFFF3F0F0),
+      // extendBodyBehindAppBar: true, // Enable the app bar to overlap the body
+      appBar: AppBar(title: Text('Home')),
 
-        // drawer: CustomSidebar(), // Add your custom sidebar here
-        // drawer: CustomSidebar(), // Add your custom sidebar here
+      // drawer: CustomSidebar(), // Add your custom sidebar here
+      // drawer: CustomSidebar(), // Add your custom sidebar here
 
-        drawer: CustomSidebar(), // Add your custom sidebar here
-        body: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text(
-                    'Event Categories',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+      drawer: CustomSidebar(), // Add your custom sidebar here
+      body: ListView(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // const Padding(
+              //   padding: EdgeInsets.all(15.0),
+              //   child: Text(
+              //     'Event Categories',
+              //     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              //   ),
+              // ),
+              SizedBox(height: 20,),
+              EventCategoryList(eventApi: eventApi),// Pass the eventApi instance
+
+              SizedBox(height: 20,),
+
+              SliderImageList(sliderApi: eventApi),// Hide the slider if there are no images
+
+
+              const Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Text(
+                  'Upcoming Events',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                EventCategoryList(eventApi: eventApi),// Pass the eventApi instance
+              ),
+              EventHList(eventApi: eventApi),
 
+              SizedBox(height: 10,),
 
-                SliderImageList(sliderApi: eventApi),// Hide the slider if there are no images
-
-                const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text(
-                    'Upcoming Events',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                EventHList(eventApi: eventApi),
-
-                SizedBox(height: 10,),
-
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 120,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: Colors.blue.shade50,
-                          // color: Colors.pink,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text('Invite your friends',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                              Text('Get 20 for ticket',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400)),
-                              Row(
-                                children: [
-                                  Container(
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                                      color: Colors.red,
-                                    ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.fromLTRB(15, 7, 15, 7),
-                                      child: Center(child: Text("Invite",style: TextStyle(color: Colors.white,fontSize: 12),)),
-                                    ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 120,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        color: Colors.blue.shade50,
+                        // color: Colors.pink,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Invite your friends',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                            Text('Get 20 for ticket',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400)),
+                            Row(
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    color: Colors.red,
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.fromLTRB(15, 7, 15, 7),
+                                    child: Center(child: Text("Invite",style: TextStyle(color: Colors.white,fontSize: 12),)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      Positioned(right: 0,bottom: -20, child: Image.asset('assets/invite.png', height: 120,))
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
+                    ),
+                    Positioned(right: 0,bottom: -20, child: Image.asset('assets/invite.png', height: 120,))
+                  ],
+                ),
+              )
+            ],
+          ),
+          Text(userId,style: TextStyle(fontSize: 100),),
+        ],
       ),
-  );
+    );
   }
 }
 
@@ -229,7 +227,7 @@ class EventCategoryList extends StatelessWidget {
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                         // color: Color(F007393B3),
-                        color: Colors.purple
+                        color: Colors.blue
                       ),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
@@ -240,7 +238,7 @@ class EventCategoryList extends StatelessWidget {
                               child: Container(
                                 width: 40, // Adjust the width and height to your preference
                                 height: 40,
-                                color: Colors.purple.shade50,
+                                color: Colors.blue.shade50,
                                 // color: Color(0xffbad9d8),
                                 child: Image.network(
                                   category.imageUrl,
@@ -287,10 +285,10 @@ class SliderImageList extends StatelessWidget {
             // color: Colors.red,
             child: CarouselSlider(
               items: images.map((image) {
-                return Image.network(image.imageUrl);
+                return ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.network(image.imageUrl));
               }).toList(),
               options: CarouselOptions(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.24,
                 autoPlay: true,
                 enlargeCenterPage: true,
               ),

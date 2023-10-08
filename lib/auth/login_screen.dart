@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> storeUserMobileNumber(String mobileNumber) async {
-    final apiUrl = Uri.parse('https://event.activeapp.in/login.php'); // Replace with your API endpoint
+    final apiUrl = Uri.parse('https://event.activeapp.in/api_login.php'); // Replace with your API endpoint
 
     try {
       final response = await http.post(
